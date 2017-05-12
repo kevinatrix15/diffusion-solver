@@ -2,6 +2,7 @@
  * @file DiffusionSolver.cpp
  * @brief Primary calling code for the thermal diffusion solver.
  * @author Kevin Briggs <kevin.briggs@3dsim.com>
+ * Copyright 2017, Kevin Briggs
  * @version 1
  * @date 2017-05-03
  */
