@@ -55,7 +55,7 @@ class Uniform3DMesh
   /**
    * @brief Get the number of nodes in the x-direction.
    *
-   * @return The number of nodes in the x-direction
+   * @return The number of nodes in the x-direction.
    */
   size_t getNumNodesX() const noexcept
   {
@@ -65,7 +65,7 @@ class Uniform3DMesh
   /**
    * @brief Get the number of nodes in the y-direction.
    *
-   * @return The number of nodes in the y-direction
+   * @return The number of nodes in the y-direction.
    */
   size_t getNumNodesY() const noexcept
   {
@@ -75,11 +75,21 @@ class Uniform3DMesh
   /**
    * @brief Get the number of nodes in the z-direction.
    *
-   * @return The number of nodes in the z-direction
+   * @return The number of nodes in the z-direction.
    */
   size_t getNumNodesZ() const noexcept
   {
     return m_numNodexZ;
+  }
+
+  /**
+   * @brief Get the total number of nodes in the mesh.
+   *
+   * @return The number of nodes in the mesh.
+   */
+  size_t getNumNodes() const noexcept
+  {
+    return m_numNodexX * m_numNodexY * m_numNodexZ;
   }
 
   /**

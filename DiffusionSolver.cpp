@@ -33,14 +33,20 @@ DifffusionSolver::~DiffusionSolver()
 DiffusionSolver::solve()
 {
   // unpack inputs
+  // TODO: implement configuration class
   const ISolver& solver = m_config.getSolver();
 
   // get mesh info
+  const Uniform3DMesh mesh = m_config.getMesh();
 
-  // declare persistent data structures
-  std::vector<real_type> Tn;
-  std::vector<real_type> Tnm1;
-  std::vector<real_type> Tnp1;
+  // allocate persistent data structures
+  std::vector<real_type> Tn(mesh.getNumNodes());
+  std::vector<real_type> Tnm1(mesh.getNumNodes());
+  std::vector<real_type> Tnp1(mesh.getNumNodes());
+  std::vector<real_type> volSource(mesh.getNumNodes());
+  std::vector<real_type> faceSource((mesh.getNumNodesX()+1) *
+      (mesh.getNumNodesY()+1) *
+      (mesh.getNumNodesZ()+1));
 
   // set initial conditions
 
@@ -49,10 +55,12 @@ DiffusionSolver::solve()
 
     // update mesh (if applicable)
 
+    // update input flux
+
     // reset boundary conditions
 
     // solve for new time step
-    solver.solve();
+    solver.solve(volSource, faceSource, Tn, Tnm1, Tnp1);
 
   }
 }
