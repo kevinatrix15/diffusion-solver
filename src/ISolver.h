@@ -28,9 +28,9 @@ class ISolver
     const std::vector<real_type>& Tnm1,
     std::vector<real_type>& Tnp1Ref) = 0;
 
-  virtual void setICs() = 0;
+  virtual void setICs(std::vector<real_type>& TnRef) = 0;
 
-  virtual void setBCs() = 0;
+  virtual void setBCs(std::vector<real_type>& TnRef) = 0;
 
   virtual real_type getSolveTime() = 0;
   // TODO: change this to return a timer object

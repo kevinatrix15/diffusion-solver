@@ -28,9 +28,9 @@ class BTCSSolver : public ISolver
     const std::vector<real_type>& Tnm1,
     std::vector<real_type>& Tnp1Ref) override;
 
-  void setICs() override;
+  void setICs(std::vector<real_type>& TnRef) override;
 
-  void setBCs() override;
+  void setBCs(std::vector<real_type>& TnRef) override;
 
   real_type getSolveTime() override;
 
@@ -38,6 +38,7 @@ class BTCSSolver : public ISolver
 
   Uniform3DMesh m_mesh;
   const real_type m_dt;
+  const real_type m_heaterTemp;
 
 };
 } // namespace DIFFSOLVER

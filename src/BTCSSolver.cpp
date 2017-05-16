@@ -8,13 +8,18 @@
 
 #include "BTCSSolver.h"
 
+namespace DIFFSOLVER
+{
+
 /******************************************************************************
 * CONSTRUCTORS / DESTRUCTORS **************************************************
 ******************************************************************************/
 
-BTCSSolver::BTCSSolver(const Uniform3DMesh& mesh, const real_type dt)
+BTCSSolver::BTCSSolver(const Uniform3DMesh& mesh, const real_type dt, const
+    real_type heaterTemp)
   : m_mesh(mesh),
-    m_dt(dt)
+    m_dt(dt),
+    m_heaterTemp(heaterTemp)
 
 {
   // ensure inputs are valid
@@ -61,6 +66,7 @@ void solve(const std::vector<real_type>& volSource,
         const size_t idx = i + (j*nx) + (k*nx*ny);
 
         // store neighbor temperatures in each direction
+        // TODO: experiment with SOR here
         const real_type TE = (i<nx-1) ? Tn[idx + EW_OFFSET] : Tn[idx];
         const real_type TW = (i>0) ? Tn[idx - EW_OFFSET] : Tn[idx];
         const real_type TN = (j<ny-1) ? Tn[idx + NS_OFFSET] : Tn[idx];
@@ -96,3 +102,73 @@ void solve(const std::vector<real_type>& volSource,
     }
   }
 }
+
+
+void BTCSSolver::setICs(std::vector<real_type>& TnRef) override
+{
+  // TODO
+}
+
+void BTCSSolver::setBCs(std::vector<real_type>& TnRef) override
+{
+  // for now, loop over each domain face cell, setting its value to the
+  // constant heater temperature
+  // TODO: build in flexibility to experiment with different boundary
+  // conditions
+  
+  const size_t nx = m_mesh.getNumNodesX();
+  const size_t ny = m_mesh.getNumNodesY();
+  const size_t nz = m_mesh.getNumNodesZ();
+
+  // north boundary
+  size_t j = ny-1;
+  for (size_t k = 0; k < nz; ++k) {
+    for (size_t i = 0; i < nx; ++i) {
+      const size_t idx = i + (j*nx) + (k*nx*ny);
+      TnRef[idx] = m_heaterTemp;
+    }
+  }
+
+  // east boundary
+  size_t i = nx-1;
+  for (size_t k = 0; k < nz; ++k) {
+    for (size_t j = 0; j < ny; ++j) {
+      const size_t idx = i + (j*nx) + (k*nx*ny);
+      TnRef[idx] = m_heaterTemp;
+    }
+  }
+
+  // south boundary
+  j = 0;
+  for (size_t k = 0; k < nz; ++k) {
+    for (size_t i = 0; i < nx; ++i) {
+      const size_t idx = i + (j*nx) + (k*nx*ny);
+      TnRef[idx] = m_heaterTemp;
+    }
+  }
+
+  // west boundary
+  i = 0;
+  for (size_t k = 0; k < nz; ++k) {
+    for (size_t j = 0; j < ny; ++j) {
+      const size_t idx = i + (j*nx) + (k*nx*ny);
+      TnRef[idx] = m_heaterTemp;
+    }
+  }
+
+  // bottom boundary
+  k = 0;
+  for (size_t j = 0; j < ny; ++j) {
+    for (size_t i = 0; i < ny; ++i) {
+      const size_t idx = i + (j*nx) + (k*nx*ny);
+      TnRef[idx] = m_heaterTemp;
+    }
+  }
+}
+
+real_type BTCSSolver::getSolveTime() override
+{
+  // TODO: build in timer functionality
+  return 0.0;
+}
+} // namespace DIFFSOLVER
